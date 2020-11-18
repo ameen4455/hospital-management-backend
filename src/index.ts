@@ -8,7 +8,7 @@ import cors from "cors";
 
 // Boot express
 const app: Application = express();
-const port = 8080;
+const port = process.env.PORT || 5000
 
 app.set("db", db);
 
