@@ -1,0 +1,35 @@
+{
+  "name": "internal-app-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build && node build/index.js ",
+    "dev": "nodemon",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ameen",
+  "license": "ISC",
+  "dependencies": {
+    "@types/cors": "^2.8.8",
+    "@types/express": "^4.17.8",
+    "@types/request-promise": "^4.1.46",
+    "axios": "^0.21.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "knex": "^0.21.12",
+    "mysql": "^2.18.1",
+    "objection": "^2.2.3",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.6",
+    "typescript": "^4.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6",
+    "ts-node": "^9.0.0"
+  }
+}

@@ -1,0 +1,26 @@
+variables:
+  gitversion: $CI_COMMIT_SHA
+  version: "$CI_COMMIT_SHA-$CI_ENVIRONMENT_NAME"
+  appname: "internal-app-backend"
+
+deploy:
+  environment: internal-app
+  stage: deploy
+  image: datagovsg/python-node:latest
+  script:
+  - git checkout $gitversion
+  - pip install awscli
+  - pip install boto3
+  - echo "deb [check-valid-until=no] http://cdn-fastly.deb.debian.org/debian jessie main" > /etc/apt/sources.list.d/jessie.list
+  - echo "deb [check-valid-until=no] http://archive.debian.org/debian jessie-backports main" > /etc/apt/sources.list.d/jessie-backports.list
+  - sed -i '/deb http:\/\/deb.debian.org\/debian jessie-updates main/d' /etc/apt/sources.list
+  - apt-get -o Acquire::Check-Valid-Until=false update
+  - apt-get install -y zip
+  - zip $version.zip -r * .[^.]*
+  - aws s3 cp $version.zip s3://internal-app-api-version/
+  - aws elasticbeanstalk delete-application-version --application-name $appname --version-label $version --delete-source-bundle
+  - aws elasticbeanstalk create-application-version --application-name $appname --version-label $version --source-bundle S3Bucket="internal-app-api-version",S3Key="$version.zip" --no-auto-create-application
+  - aws elasticbeanstalk update-environment --application-name $appname --environment-name internalAppBackend-env --version-label $version
+
+  only:
+    - master
