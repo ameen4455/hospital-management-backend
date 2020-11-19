@@ -1,17 +1,14 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('appointment', (table) => {
-        table.increments('a_id');
-        table.string('data_time').notNullable();
-        table.string('h_id')
-        .references('h_id')
-        .inTable('hospital');
-        table.string('d_id')
-        .references('d_id')
-        .inTable('doctor');
-        table.string('u_id')
-        .references('u_id')
-        .inTable('user');
+        table.increments();
+        table.integer('h_id').unsigned().notNullable();
+        table.integer('d_id').unsigned().notNullable();
+        table.integer('u_id').unsigned().notNullable();
+        table.string('time').notNullable();
+        table.foreign('d_id').references('doctor.id');
+        table.foreign('h_id').references('hospital.id');
+        table.foreign('u_id').references('users.id');
     });        
 };
 

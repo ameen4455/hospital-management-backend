@@ -1,13 +1,11 @@
 
 exports.up = function(knex) {
     return knex.schema.createTable('works', (table) => {
-        table.string('d_id')
-        .references('d_id')
-        .inTable('doctor');
-        table.string('h_id')
-        .references('h_id')
-        .inTable('hospital');
-        table.integer('days').notNullable();
+        table.integer('h_id').unsigned().notNullable();
+        table.integer('d_id').unsigned().notNullable();
+        table.foreign('d_id').references('doctor.id');
+        table.foreign('h_id').references('hospital.id');
+        table.string('days').notNullable();
         table.string('time').notNullable();
     });        
 };
