@@ -5,8 +5,13 @@ exports.up = function(knex) {
         table.integer('d_id').unsigned().notNullable();
         table.foreign('d_id').references('doctor.id');
         table.foreign('h_id').references('hospital.id');
-        table.string('days').notNullable();
-        table.string('time').notNullable();
+        table.string('monday');
+        table.string('tuesay');
+        table.string('wednessday');
+        table.string('thursday');
+        table.string('friday');
+        table.string('saturday');
+        table.integer('session_duration');
     });        
 };
 
