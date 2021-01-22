@@ -17,13 +17,13 @@ const getUserFromDB = async (email: string, db: any) => {
   return db
     .select("*")
     .from("users")
-    .where("email", email)
+    .where("username", email)
     .then((rows: any) => rows);
 };
 
 const insertUserIntoDB = async (email: string, password: string, db: any) => {
   return db
-    .insert({ email, password })
+    .insert({ username: email, password, gender: "m", name: email, age: 20 })
     .into("users")
     .returning("*")
     .then((rows: any) => {
@@ -48,7 +48,7 @@ export const login = async function (req: Request, res: Response) {
     const { email, password } = req.body;
 
     if (checkIfInvalid(email, password)) {
-      res.status(400).send({ message: "Invalid username or password" });
+      res.status(500).send({ message: "Invalid username or password" });
       return;
     }
 
@@ -57,19 +57,23 @@ export const login = async function (req: Request, res: Response) {
     const user = await getUserFromDB(email, db);
 
     if (user[0]) {
-      bcrypt.compare(password, user[0].password, async function (
-        err: any,
-        resp: any
-      ) {
-        if (resp) {
-          res.send({ token:"thisisafaketokenpleasegenerate" });
-        } else {
-          res.status(400).send({ message: "Invalid username or password" });
-          return;
+      bcrypt.compare(
+        password,
+        user[0].password,
+        async function (err: any, resp: any) {
+          if (resp) {
+            res.send({
+              id: user[0].id,
+              token: "thisisafaketokenpleasegenerate",
+            });
+          } else {
+            res.status(403).send({ message: "Invalid username or password" });
+            return;
+          }
         }
-      });
+      );
     } else {
-      res.status(400).send({ message: "Invalid username or password" });
+      res.status(401).send({ message: "Invalid username or password" });
       return;
     }
   } catch (e) {

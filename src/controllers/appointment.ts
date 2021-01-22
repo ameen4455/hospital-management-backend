@@ -2,6 +2,9 @@ import { Request, Response } from "express";
 import { Works } from "../models/works";
 import moment from "moment";
 import { Appointments } from "../models/appointment";
+import { Doctor } from "../models/doctors";
+import { Hospital } from "../models/hospital";
+import hospital from "routes/hospital";
 
 // TODO Get All appointments from user id
 
@@ -111,9 +114,14 @@ export const addAppointment = async function (req: Request, res: Response) {
 
 export const getAppointment = async function (req: Request, res: Response) {
   try {
+    console.log(req.params.user);
+    
     const data = await Appointments.query()
       .select("*")
-      .where("u_id", req.params.user);
+      .select("doctor.name as doctor")
+      .where("u_id", req.params.user)
+      .join("doctor", "doctor.id", "appointment.d_id")
+      .join("hospital", "hospital.id", "appointment.h_id");
 
     if (!data) {
       res.sendStatus(404);
