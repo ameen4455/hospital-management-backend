@@ -108,3 +108,21 @@ export const addAppointment = async function (req: Request, res: Response) {
     console.log(e);
   }
 };
+
+export const getAppointment = async function (req: Request, res: Response) {
+  try {
+    const data = await Appointments.query()
+      .select("*")
+      .where("u_id", req.params.user);
+
+    if (!data) {
+      res.sendStatus(404);
+      return;
+    }
+
+    res.send({ data });
+  } catch (e) {
+    res.status(500).send(e);
+    console.log(e);
+  }
+};
